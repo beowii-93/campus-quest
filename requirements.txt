@@ -1,0 +1,5 @@
+Flask>=3.0,<4.0
+python-dotenv>=1.0,<2.0
+# Production WSGI server options (install the one used by your host):
+gunicorn>=21.2; platform_system != "Windows"
+waitress>=3.0; platform_system == "Windows"

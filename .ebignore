@@ -1,0 +1,10 @@
+.venv/
+venv/
+.git/
+.env
+__pycache__/
+*.py[cod]
+instance/*.db
+instance/*.db-shm
+instance/*.db-wal
+uploads/

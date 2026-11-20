@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf9f6" id="themeColorMeta">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <script>
+    (function () {
+      try {
+        const saved = localStorage.getItem('campusquest-theme');
+        const preferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = saved || preferred;
+        document.documentElement.dataset.themeSource = saved ? 'manual' : 'system';
+      } catch (_) { document.documentElement.dataset.theme = 'light'; }
+    })();
+  </script>
+  <meta name="description" content="Discover small campus challenges, meet teammates, try something new and collect meaningful badges with CampusQuest.">
+  <meta property="og:title" content="CampusQuest — Make a little magic on campus">
+  <meta property="og:description" content="Tiny challenges. Unexpected teammates. Stories worth telling.">
+  <meta property="og:type" content="website">
+  <title>CampusQuest — Make a little magic on campus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to main content</a>
+  <div class="site-frame">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="CampusQuest home">
+        <span class="brand-mark">c<span>q</span></span>
+        <span>campusquest<span class="brand-period">.</span></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a class="active" href="#explore">Explore</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#squads">Squads</a>
+        <a href="#your-space">Your space</a>
+      </nav>
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open navigation"><span></span><span></span></button>
+      <div class="mobile-menu" id="mobileMenu">
+        <a href="#explore">Explore quests <span>↗</span></a>
+        <a href="#how-it-works">How it works <span>↗</span></a>
+        <a href="#squads">Find a squad <span>↗</span></a>
+        <a href="#your-space">Your space <span>↗</span></a>
+      </div>
+      <div class="top-actions">
+        <span class="signed-in-label" id="signedInLabel">your campus, your quest</span>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
+          <span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span>
+        </button>
+        <button class="button button-dark button-small" id="authButton">Sign in <span class="button-arrow">↗</span></button>
+        <button class="avatar-button hidden" id="profileButton" aria-label="Open profile">Y</button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="heroTitle">
+        <div class="hero-orbit orbit-one"></div>
+        <div class="hero-orbit orbit-two"></div>
+        <span class="hero-spark spark-one">✳</span>
+        <span class="hero-spark spark-two">✦</span>
+        <span class="hero-spark spark-three">·</span>
+
+        <article class="float-card float-blue">
+          <div class="card-kicker"><span class="kicker-dot"></span> THE LITTLE WIN</div>
+          <h3>Ship a tiny website</h3>
+          <p>Five days. One small idea. A link you can show off.</p>
+          <div class="mini-progress"><span></span></div>
+          <div class="card-foot"><span>5-day quest</span><span>↗</span></div>
+        </article>
+
+        <article class="float-card float-peach">
+          <div class="card-kicker"><span class="kicker-dot"></span> YOUR BADGE SHELF</div>
+          <h3>Little things count.</h3>
+          <div class="badge-preview-row"><span>✦</span><span>☀</span><span>🏁</span><span class="badge-ghost">+</span></div>
+          <p>Collect badges for showing up, helping out and finishing a quest.</p>
+        </article>
+
+        <div class="hero-copy">
+          <div class="hero-kicker"><span class="kicker-live-dot"></span> THE STUDENT-POWERED CHALLENGE CLUB</div>
+          <h1 id="heroTitle">Make a little<br><span>magic on campus.</span></h1>
+          <p class="hero-subtitle">Tiny challenges. Unexpected teammates. Real things to try, make and remember long after the semester ends.</p>
+          <div class="hero-search-wrap">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="heroSearch" type="search" placeholder="What are you in the mood to try?" aria-label="Search challenges">
+            <button id="heroSearchButton" aria-label="Search challenges">↗</button>
+          </div>
+          <div class="hero-quick-search" aria-label="Popular searches">
+            <span>Try:</span>
+            <button type="button" data-quick-search="coding">coding</button>
+            <button type="button" data-quick-search="creative">creative</button>
+            <button type="button" data-quick-search="meet people">meet people</button>
+          </div>
+          <div class="hero-ctas">
+            <a class="button button-dark" href="#explore">Find your next quest <span class="button-arrow">↗</span></a>
+            <button class="text-button" id="heroMuseButton">Surprise me <span>✧</span></button>
+          </div>
+          <div class="hero-note"><span class="tiny-avatars"><i>A</i><i>M</i><i>R</i></span><span>Better when we do it together.</span></div>
+        </div>
+
+        <article class="float-card float-mint">
+          <div class="card-kicker"><span class="kicker-dot"></span> SQUAD ENERGY</div>
+          <h3>Don't go solo.</h3>
+          <p>Find people who are up for the same little adventure.</p>
+          <div class="squad-avatars"><i>J</i><i>K</i><i>S</i><b>+3</b></div>
+          <div class="card-foot"><span>Find your people</span><span>→</span></div>
+        </article>
+
+        <article class="float-card float-lilac">
+          <div class="card-kicker"><span class="kicker-dot"></span> QUEST JAR</div>
+          <h3>Not sure where to start?</h3>
+          <p>Tell Quest Muse your mood. Get a tiny idea that fits your day.</p>
+          <button class="jar-mini-button" id="openMuseButton">Pick a little quest <span>✧</span></button>
+        </article>
+        <div class="hero-caption caption-left">small steps, surprisingly big stories</div>
+        <div class="hero-caption caption-right">made for campus people <span>↙</span></div>
+      </section>
+
+      <section class="intro-strip" aria-label="CampusQuest introduction">
+        <span class="strip-star">✳</span>
+        <p>Not another productivity app. <strong>A reason to try something with your people.</strong></p>
+        <span class="strip-note">NO XP. JUST REAL LITTLE WINS.</span>
+      </section>
+
+      <section class="how-section section-block" id="how-it-works" aria-labelledby="howTitle">
+        <div class="how-intro">
+          <div class="eyebrow"><span class="eyebrow-line"></span> IT'S REALLY THAT SIMPLE</div>
+          <h2 id="howTitle">A little curiosity<br><span>goes a long way.</span></h2>
+          <p>Pick something that sounds fun. Bring someone along. Leave with a new story, a skill or a tiny win that's yours.</p>
+          <div class="no-pressure-note"><span>✳</span> No XP. No pressure. No perfect streaks required.</div>
+        </div>
+        <div class="how-steps">
+          <article class="how-step step-discover">
+            <div class="step-number">01 <span>✧</span></div>
+            <div class="step-visual visual-search"><span class="visual-orbit"></span><span class="visual-emoji">⌕</span><i>find your thing</i></div>
+            <h3>Find a quest</h3>
+            <p>Browse tiny adventures by mood, skill, time or just follow a spark.</p>
+          </article>
+          <article class="how-step step-join">
+            <div class="step-number">02 <span>♡</span></div>
+            <div class="step-visual visual-people"><span class="person-dot person-one">A</span><span class="person-dot person-two">M</span><span class="person-dot person-three">R</span><span class="people-plus">+</span></div>
+            <h3>Bring your people</h3>
+            <p>Go solo, invite a friend or find a squad that's up for the same idea.</p>
+          </article>
+          <article class="how-step step-make">
+            <div class="step-number">03 <span>✦</span></div>
+            <div class="step-visual visual-badge"><span class="badge-star">✦</span><span class="badge-ribbon">a little keepsake</span></div>
+            <h3>Make it real</h3>
+            <p>Check in, share what you made and collect badges for the moments that count.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="vibe-section" aria-labelledby="vibeTitle">
+        <div class="vibe-heading">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> THERE'S A QUEST FOR YOUR KIND OF DAY</div><h2 id="vibeTitle">Choose your <span>kind of fun.</span></h2></div>
+          <p>Pick from skill sprints, meetups, creative jams, friendly competitions and small acts that make campus better.</p>
+        </div>
+        <div class="vibe-grid">
+          <button class="vibe-tile vibe-tech" type="button" data-vibe-filter="Tech"><span class="vibe-icon">⌘</span><span class="vibe-label">MAKE & BUILD</span><strong>For curious minds</strong><small>Code, apps, experiments <b>↗</b></small></button>
+          <button class="vibe-tile vibe-creative" type="button" data-vibe-filter="Creative"><span class="vibe-icon">✿</span><span class="vibe-label">MAKE IT PRETTY</span><strong>For creative sparks</strong><small>Design, photos, stories <b>↗</b></small></button>
+          <button class="vibe-tile vibe-social" type="button" data-vibe-filter="Social"><span class="vibe-icon">♡</span><span class="vibe-label">FIND YOUR PEOPLE</span><strong>For good company</strong><small>Meet, teach, team up <b>↗</b></small></button>
+          <button class="vibe-tile vibe-wellbeing" type="button" data-vibe-filter="Wellbeing"><span class="vibe-icon">☁</span><span class="vibe-label">TAKE A BREATHER</span><strong>For softer days</strong><small>Reset, read, recharge <b>↗</b></small></button>
+          <button class="vibe-tile vibe-sports" type="button" data-vibe-filter="Sports"><span class="vibe-icon">🏸</span><span class="vibe-label">MOVE & PLAY</span><strong>For active days</strong><small>Sports, games, movement <b>↗</b></small></button>
+          <button class="vibe-tile vibe-career" type="button" data-vibe-filter="Career"><span class="vibe-icon">✧</span><span class="vibe-label">GET CAREER-READY</span><strong>For future you</strong><small>Resumes, interviews, portfolios <b>↗</b></small></button>
+          <button class="vibe-tile vibe-community" type="button" data-vibe-filter="Community"><span class="vibe-icon">☀</span><span class="vibe-label">DO SOME GOOD</span><strong>For campus hearts</strong><small>Help, teach, improve <b>↗</b></small></button>
+          <button class="vibe-tile vibe-explore" type="button" data-vibe-filter="Games"><span class="vibe-icon">🧩</span><span class="vibe-label">PLAY & EXPLORE</span><strong>For curious explorers</strong><small>Clues, culture, discovery <b>↗</b></small></button>
+        </div>
+      </section>
+
+      <section class="weekly-spotlight" aria-labelledby="weeklyTitle">
+        <div class="weekly-copy">
+          <div class="eyebrow"><span class="eyebrow-line"></span> A FRESH LITTLE PROMPT</div>
+          <h2 id="weeklyTitle">This week's <span>campus quest.</span></h2>
+          <p>A small shared mission to give the week a story. The featured quest rotates every week.</p>
+        </div>
+        <article class="weekly-card" id="weeklyQuestCard" aria-live="polite">
+          <div class="weekly-card-art" aria-hidden="true">✦</div>
+          <div class="weekly-card-copy"><span class="weekly-card-kicker">WEEKLY SPOTLIGHT</span><h3>Finding a little adventure…</h3><p>Loading this week's campus pick.</p></div>
+          <button class="button button-dark button-small" id="weeklyQuestButton" type="button" disabled>View quest ↗</button>
+        </article>
+      </section>
+
+      <section class="section-block explore-section" id="explore">
+        <div class="section-heading-row">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span> THE QUEST BOARD</div>
+            <h2>Pick a thing.<br><span>Make it happen.</span></h2>
+          </div>
+          <div class="heading-side-note">A good challenge should feel like an invitation,<br>not another assignment.</div>
+        </div>
+        <div class="filter-row" role="group" aria-label="Filter challenges">
+          <button class="filter-chip active" data-filter="All">All activities <span id="questCount">—</span></button>
+          <button class="filter-chip" data-filter="Tech">⌘ Tech</button>
+          <button class="filter-chip" data-filter="Creative">✿ Creative</button>
+          <button class="filter-chip" data-filter="Social">♡ Social</button>
+          <button class="filter-chip" data-filter="Wellbeing">☁ Wellbeing</button>
+          <button class="filter-chip" data-filter="Sports">🏸 Sports</button>
+          <button class="filter-chip" data-filter="Career">✧ Career</button>
+          <button class="filter-chip" data-filter="Community">☀ Community</button>
+          <button class="filter-chip" data-filter="Sustainability">♻ Sustainability</button>
+          <button class="filter-chip" data-filter="Culture">🌍 Culture</button>
+          <button class="filter-chip" data-filter="Games">🧩 Games</button>
+          <button class="filter-chip" data-filter="Learning">📚 Learning</button>
+          <label class="activity-type-filter"><span>Activity type</span><select id="activityTypeFilter"><option value="All">Any format</option><option>Mini-project</option><option>Skill sprint</option><option>Campus meetup</option><option>Friendly competition</option><option>Creative jam</option><option>Community action</option><option>Wellbeing habit</option><option>Peer learning</option><option>Campus exploration</option></select></label>
+          <button class="create-quest-button" id="createQuestButton">＋ Create a quest</button>
+        </div>
+        <div class="challenge-layout">
+          <div class="challenge-grid" id="challengeGrid" aria-live="polite">
+            <div class="loading-card">Gathering little adventures…</div>
+          </div>
+          <aside class="muse-card" id="muse">
+            <div class="muse-glow"></div>
+            <div class="muse-topline"><span class="muse-icon">✧</span><span>YOUR TINY IDEA GENERATOR</span><span class="muse-spark">✳</span></div>
+            <h3>Quest <em>Muse</em></h3>
+            <p class="muse-description">A little nudge for the days when you want to do something, but don't know what.</p>
+            <label for="moodSelect">What's your energy like?</label>
+            <select id="moodSelect">
+              <option value="curious">Curious & open</option>
+              <option value="focused">Ready to focus</option>
+              <option value="creative">A little creative</option>
+              <option value="social">Want to meet people</option>
+              <option value="gentle">Taking it gently</option>
+              <option value="adventurous">Feeling adventurous</option>
+              <option value="career">Thinking about my future</option>
+              <option value="playful">In the mood to play</option>
+            </select>
+            <label for="timeSelect">How long do you want to try it?</label>
+            <select id="timeSelect">
+              <option value="3">A quick 3-day quest</option>
+              <option value="5" selected>A 5-day mini-challenge</option>
+              <option value="14">Up to two weeks</option>
+            </select>
+            <button class="button button-dark muse-button" id="museButton">Find my little quest <span class="button-arrow">✧</span></button>
+            <div class="muse-result hidden" id="museResult" aria-live="polite"></div>
+            <div class="muse-footnote"><span>✦</span> Gentle suggestions, never pressure.</div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section-block your-space-section" id="your-space">
+        <div class="section-heading-row compact-heading">
+          <div>
+            <div class="eyebrow"><span class="eyebrow-line"></span> YOUR LITTLE CORNER</div>
+            <h2>Progress that <span>feels good.</span></h2>
+          </div>
+          <p class="heading-side-note">No points to chase. Just a place to see<br>what you've tried and what you've finished.</p>
+        </div>
+        <div class="your-space-grid">
+          <div class="space-panel quests-panel">
+            <div class="panel-heading"><div><span class="panel-label">IN YOUR ORBIT</span><h3>My quests</h3></div><a href="#explore" class="panel-link">Find another <span>↗</span></a></div>
+            <div id="myQuestsList" class="my-quests-list"><div class="empty-state">Sign in to keep your quests together.</div></div>
+          </div>
+          <div class="space-panel badge-panel">
+            <div class="panel-heading"><div><span class="panel-label">THE KEEPSAKES</span><h3>Badge shelf</h3></div><span class="badge-count" id="badgeCount">0 earned</span></div>
+            <p class="panel-copy">Little reminders of the things you showed up for.</p>
+            <div class="badge-shelf" id="badgeShelf"><div class="badge-locked">✦<small>First Quest</small></div><div class="badge-locked">🏁<small>Finisher</small></div><div class="badge-locked">☀<small>Steady Spark</small></div><div class="badge-locked">✧<small>Squad Star</small></div></div>
+            <div class="badge-note">Badges are earned through participation — not points.</div>
+          </div>
+          <div class="space-panel activity-panel">
+            <div class="panel-heading"><div><span class="panel-label">A LITTLE HISTORY</span><h3>Your activity garden</h3></div><span class="activity-total" id="activityTotal">— active days</span></div>
+            <p class="panel-copy">Every square is a day you did something for a quest. Even tiny counts.</p>
+            <div class="heatmap-wrap"><div class="heatmap-months" id="heatmapMonths" aria-hidden="true"><span>Recent weeks</span></div><div class="heatmap-grid" id="heatmapGrid" aria-label="Activity over the past 16 weeks"></div><div class="heatmap-legend"><span>quiet</span><i class="level-0"></i><i class="level-1"></i><i class="level-2"></i><i class="level-3"></i><span>in bloom</span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block squad-section" id="squads">
+        <div class="section-heading-row compact-heading">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> BETTER TOGETHER</div><h2>Good quests need <span>good people.</span></h2></div>
+          <button class="button button-outline" id="createTeamButton">＋ Start a squad</button>
+        </div>
+        <div class="squad-layout">
+          <div class="squad-list" id="teamList"><div class="empty-state">Squads are warming up…</div></div>
+          <div class="leaderboard-card">
+            <div class="leaderboard-title"><span class="panel-label">CAMPUS FACES</span><h3>People showing up</h3><p>Celebrating finished quests and badges, not a points race.</p></div>
+            <label class="leaderboard-optin"><input id="leaderboardOptIn" type="checkbox" disabled> <span>Opt in: show my name on this community board</span></label>
+            <div id="leaderboardList" class="leaderboard-list"><div class="empty-state">Sign in and take part to appear here.</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-block admin-section hidden" id="adminTools" aria-labelledby="adminTitle">
+        <div class="section-heading-row compact-heading">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> COMMUNITY CARE</div><h2 id="adminTitle">Quest review <span>desk.</span></h2></div>
+          <p class="heading-side-note">Review student-submitted quests before they reach the public board.</p>
+        </div>
+        <div class="admin-subheading"><h3>Challenge proposals</h3><p>New community quests before they reach Explore.</p></div>
+        <div class="admin-queue" id="pendingChallenges"><div class="empty-state">No quests are waiting for review.</div></div>
+        <div class="admin-subheading"><h3>Final work submissions</h3><p>Approve meaningful evidence before completion badges are awarded.</p></div>
+        <div class="admin-queue" id="pendingSubmissions"><div class="empty-state">No final work is waiting for review.</div></div>
+        <div class="admin-subheading"><h3>Community reports</h3><p>Review flagged public quests and keep the board welcoming.</p></div>
+        <div class="admin-queue" id="pendingReports"><div class="empty-state">No reports are waiting for review.</div></div>
+      </section>
+
+      <section class="closing-cta">
+        <div class="closing-spark">✳</div>
+        <div class="eyebrow"><span class="eyebrow-line"></span> YOUR NEXT STORY STARTS SMALL</div>
+        <h2>One tiny quest.<br><span>A whole new story.</span></h2>
+        <p>Bring a friend, try something new, and leave campus a little more interesting than you found it.</p>
+        <a class="button button-dark" href="#explore">Explore the quest board <span class="button-arrow">↗</span></a>
+        <div class="closing-doodle doodle-left">✧</div><div class="closing-doodle doodle-right">✳</div>
+      </section>
+    </main>
+    <footer class="footer"><a class="brand footer-brand" href="#top"><span class="brand-mark">c<span>q</span></span><span>campusquest<span class="brand-period">.</span></span></a><span>Made for the in-between moments of campus life.</span><span>© <span id="year"></span> CampusQuest</span></footer>
+  </div>
+
+  <!-- Auth modal -->
+  <div class="modal-backdrop hidden" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="modal-card auth-modal">
+      <button class="modal-close" data-close="authModal" aria-label="Close">×</button>
+      <div class="modal-kicker">COME ON IN <span>✦</span></div>
+      <h2 id="authTitle">Your campus story<br><em>starts here.</em></h2>
+      <div class="auth-tabs"><button class="auth-tab active" data-auth-mode="login">Sign in</button><button class="auth-tab" data-auth-mode="register">Create account</button></div>
+      <form id="authForm">
+        <div class="field-group hidden" id="nameField"><label for="authName">Your name</label><input id="authName" name="name" autocomplete="name" placeholder="What should we call you?"></div>
+        <div class="field-group"><label for="authEmail">College or personal email</label><input id="authEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+        <div class="field-group"><label for="authPassword">Password</label><input id="authPassword" name="password" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"></div>
+        <button class="button button-dark modal-submit" type="submit" id="authSubmit">Sign in <span class="button-arrow">↗</span></button>
+      </form>
+      {% if demo_enabled %}<button class="demo-link" id="demoLoginButton">Just exploring? Enter the demo space →</button>{% endif %}
+      <p class="form-message" id="authMessage" role="status"></p>
+    </div>
+  </div>
+
+  <!-- Student profile modal -->
+  <div class="modal-backdrop hidden" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+    <div class="modal-card small-modal">
+      <button class="modal-close" data-close="profileModal" aria-label="Close">×</button>
+      <div class="modal-kicker">YOUR CAMPUS IDENTITY <span>✦</span></div>
+      <h2 id="profileTitle">Make your<br><em>little corner.</em></h2>
+      <div class="profile-stats" id="profileStats"></div>
+      <form id="profileForm">
+        <div class="field-group"><label for="profileDepartment">Department</label><input id="profileDepartment" maxlength="80" placeholder="e.g. Computer Science"></div>
+        <div class="field-group"><label for="profileYear">Study year</label><select id="profileYear"><option value="">Choose year</option><option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option><option>Graduate</option><option>Other</option></select></div>
+        <div class="field-group"><label for="profileBio">A little about you</label><textarea id="profileBio" rows="3" maxlength="280" placeholder="What are you curious about? What do you like making?"></textarea></div>
+        <div class="field-group"><label for="profileInterests">Interests and skills</label><input id="profileInterests" maxlength="240" placeholder="Java, photography, UI design, badminton…"></div>
+        <label class="profile-visibility"><input id="profilePublic" type="checkbox"> <span>Let other students view my profile and interests</span></label>
+        <button class="button button-dark modal-submit" type="submit">Save my profile <span class="button-arrow">↗</span></button>
+      </form>
+      <div class="profile-kudos" id="profileKudos"><h3>Kind words from teammates</h3><p>Peer kudos will show here when teammates recognize your contribution.</p></div>
+      <p class="form-message" id="profileMessage" role="status"></p>
+    </div>
+  </div>
+
+  <!-- Squad detail modal -->
+  <div class="modal-backdrop hidden" id="teamDetailModal" role="dialog" aria-modal="true" aria-labelledby="teamDetailTitle">
+    <div class="modal-card detail-modal">
+      <button class="modal-close" data-close="teamDetailModal" aria-label="Close">×</button>
+      <div class="modal-kicker">THE SQUAD SPACE <span>♡</span></div>
+      <h2 id="teamDetailTitle">Your people.</h2>
+      <p class="modal-intro" id="teamDetailDescription"></p>
+      <div class="detail-facts" id="teamDetailFacts"></div>
+      <div class="team-member-list" id="teamMemberList"></div>
+      <div class="team-request-list hidden" id="teamRequestList"><span class="panel-label">JOIN REQUESTS</span><div id="teamRequests"></div></div>
+      <div class="team-detail-actions"><button class="button button-dark" id="teamRequestButton" type="button">Request to join ↗</button><button class="button button-outline hidden" id="teamViewQuestButton" type="button">View related quest</button></div>
+      <form id="peerKudosForm" class="peer-kudos-form hidden">
+        <div class="modal-kicker">PASS A LITTLE PRAISE <span>✧</span></div>
+        <h3>Recognize a teammate</h3>
+        <div class="field-group"><label for="kudosRecipient">Who helped the squad?</label><select id="kudosRecipient"></select></div>
+        <div class="field-group"><label for="kudosMessage">What did they do well?</label><textarea id="kudosMessage" rows="2" maxlength="240" placeholder="You made the tricky bit easier by…"></textarea></div>
+        <button class="button button-dark button-small" type="submit">Send peer kudos ♡</button>
+        <p class="form-message" id="kudosMessageStatus" role="status"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Challenge detail modal -->
+  <div class="modal-backdrop hidden" id="challengeDetailModal" role="dialog" aria-modal="true" aria-labelledby="challengeDetailTitle">
+    <div class="modal-card detail-modal">
+      <button class="modal-close" data-close="challengeDetailModal" aria-label="Close">×</button>
+      <div class="detail-modal-top"><span class="modal-kicker" id="challengeDetailCategory">QUEST DETAILS</span><span class="detail-badge" id="challengeDetailBadge">✦ Badge</span></div>
+      <h2 id="challengeDetailTitle">A little adventure.</h2>
+      <p class="modal-intro" id="challengeDetailDescription"></p>
+      <div class="detail-facts" id="challengeDetailFacts"></div>
+      <div class="detail-mission"><span class="panel-label">THE MISSION</span><p id="challengeDetailMission"></p></div>
+      <div class="detail-note" id="challengeDetailStatusNote">Join the quest to add it to your personal space.</div>
+      <div class="detail-actions"><button class="button button-dark" id="challengeDetailPrimary" type="button">Join this quest ↗</button><button class="button button-outline" id="challengeReportToggle" type="button">Report quest</button></div>
+      <form class="report-form hidden" id="challengeReportForm">
+        <div class="field-group"><label for="reportReason">Why are you reporting this quest?</label><select id="reportReason"><option value="spam">Spam</option><option value="misleading">Misleading information</option><option value="inappropriate">Inappropriate content</option><option value="unsafe">Unsafe activity</option><option value="copyright">Copyright concern</option><option value="other">Other</option></select></div>
+        <div class="field-group"><label for="reportDetails">Additional context <span class="optional-label">optional</span></label><textarea id="reportDetails" rows="2" maxlength="500" placeholder="Share enough detail for the moderators to review…"></textarea></div>
+        <button class="button button-dark button-small" type="submit">Send report</button><p class="form-message" id="reportMessage" role="status"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Final work submission modal -->
+  <div class="modal-backdrop hidden" id="finalSubmitModal" role="dialog" aria-modal="true" aria-labelledby="finalSubmitTitle">
+    <div class="modal-card small-modal">
+      <button class="modal-close" data-close="finalSubmitModal" aria-label="Close">×</button>
+      <div class="modal-kicker">THE FINISHING TOUCH <span>✦</span></div>
+      <h2 id="finalSubmitTitle">Show us what<br><em>you made.</em></h2>
+      <p class="modal-intro" id="finalSubmitQuestName">Share a link or a short reflection. A moderator will review it before your completion badge is awarded.</p>
+      <form id="finalSubmitForm">
+        <input type="hidden" id="finalSubmitChallengeId">
+        <div class="field-group"><label for="finalSubmitNote">What did you complete or learn?</label><textarea id="finalSubmitNote" rows="4" maxlength="1200" placeholder="Tell us what you tried, what you made, or what you learned…"></textarea></div>
+        <div class="field-group"><label for="finalSubmitProof">Link to your work <span class="optional-label">optional</span></label><input id="finalSubmitProof" type="url" placeholder="https://github.com/you/project"></div>
+        <p class="form-hint">Add at least a short reflection or a link. Please don't share private information.</p>
+        <button class="button button-dark modal-submit" type="submit">Submit for review <span class="button-arrow">↗</span></button>
+      </form>
+      <p class="form-message" id="finalSubmitMessage" role="status"></p>
+    </div>
+  </div>
+
+  <!-- Check-in modal -->
+  <div class="modal-backdrop hidden" id="checkinModal" role="dialog" aria-modal="true" aria-labelledby="checkinTitle">
+    <div class="modal-card small-modal">
+      <button class="modal-close" data-close="checkinModal" aria-label="Close">×</button>
+      <div class="modal-kicker">A LITTLE PROGRESS <span>✧</span></div>
+      <h2 id="checkinTitle">You showed up.<br><em>That matters.</em></h2>
+      <p class="modal-intro" id="checkinQuestName">Add a note about today's progress.</p>
+      <p class="checkin-hint">Check-ins are self-reported. Add a link when you have work you can share; never upload private information.</p>
+      <form id="checkinForm">
+        <input type="hidden" id="checkinChallengeId">
+        <div class="field-group"><label for="checkinNote">What did you try today?</label><textarea id="checkinNote" rows="3" maxlength="500" placeholder="A small win, a thing you learned, or what felt tricky…"></textarea></div>
+        <div class="field-group"><label for="checkinProof">Proof link <span class="optional-label">optional</span></label><input id="checkinProof" type="url" placeholder="https://github.com/you/project"></div>
+        <button class="button button-dark modal-submit" type="submit">Save today's check-in <span class="button-arrow">↗</span></button>
+      </form>
+      <p class="form-message" id="checkinMessage" role="status"></p>
+    </div>
+  </div>
+
+  <!-- Create quest modal -->
+  <div class="modal-backdrop hidden" id="createQuestModal" role="dialog" aria-modal="true" aria-labelledby="createQuestTitle">
+    <div class="modal-card small-modal">
+      <button class="modal-close" data-close="createQuestModal" aria-label="Close">×</button>
+      <div class="modal-kicker">PASS THE SPARK ALONG <span>✳</span></div>
+      <h2 id="createQuestTitle">Got a good idea?<br><em>Make it a quest.</em></h2>
+      <form id="createQuestForm">
+        <div class="field-group"><label for="newQuestTitle">Quest title</label><input id="newQuestTitle" maxlength="80" required placeholder="e.g. Build a tiny portfolio"></div>
+        <div class="form-two-col"><div class="field-group"><label for="newQuestCategory">Category</label><select id="newQuestCategory"><option>Tech</option><option>Creative</option><option>Social</option><option>Wellbeing</option><option>Sports</option><option>Career</option><option>Community</option><option>Sustainability</option><option>Culture</option><option>Games</option><option>Learning</option></select></div><div class="field-group"><label for="newQuestType">Activity type</label><select id="newQuestType"><option>Mini-project</option><option>Skill sprint</option><option>Campus meetup</option><option>Friendly competition</option><option>Creative jam</option><option>Community action</option><option>Wellbeing habit</option><option>Peer learning</option><option>Campus exploration</option></select></div></div>
+        <div class="form-two-col"><div class="field-group"><label for="newQuestDuration">Duration</label><select id="newQuestDuration"><option value="1">1 day</option><option value="3">3 days</option><option value="5" selected>5 days</option><option value="7">7 days</option><option value="14">14 days</option></select></div><div class="field-group"><label for="newQuestTeam">Participation</label><select id="newQuestTeam"><option value="team" selected>Team friendly</option><option value="solo">Solo activity</option></select></div></div>
+        <div class="field-group"><label for="newQuestDescription">What's the little mission?</label><textarea id="newQuestDescription" rows="3" maxlength="240" required placeholder="Tell people what they'll try and why it could be fun…"></textarea></div>
+        <p class="form-hint">New community quests are reviewed before appearing on the public board.</p>
+        <button class="button button-dark modal-submit" type="submit">Send for review <span class="button-arrow">↗</span></button>
+      </form>
+      <p class="form-message" id="createQuestMessage" role="status"></p>
+    </div>
+  </div>
+
+  <!-- Create team modal -->
+  <div class="modal-backdrop hidden" id="createTeamModal" role="dialog" aria-modal="true" aria-labelledby="createTeamTitle">
+    <div class="modal-card small-modal">
+      <button class="modal-close" data-close="createTeamModal" aria-label="Close">×</button>
+      <div class="modal-kicker">FIND YOUR PEOPLE <span>♡</span></div>
+      <h2 id="createTeamTitle">Good things are<br><em>better together.</em></h2>
+      <form id="createTeamForm">
+        <div class="field-group"><label for="teamName">Squad name</label><input id="teamName" maxlength="50" required placeholder="e.g. The Bug Busters"></div>
+        <div class="field-group"><label for="teamChallenge">Which quest are you taking on?</label><select id="teamChallenge" required></select></div>
+        <div class="field-group"><label for="teamDescription">What kind of teammates are you looking for?</label><textarea id="teamDescription" rows="2" maxlength="180" placeholder="Curious beginners, design minds, Python people…"></textarea></div>
+        <button class="button button-dark modal-submit" type="submit">Create your squad <span class="button-arrow">↗</span></button>
+      </form>
+      <p class="form-message" id="createTeamMessage" role="status"></p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
